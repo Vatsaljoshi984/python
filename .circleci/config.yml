@@ -33,7 +33,6 @@ jobs:
             docker tag my-django-app $DOCKER_USERNAME/my-django-app:latest
             docker push $DOCKER_USERNAME/my-django-app:latest
 
-
   deploy:
     docker:
       - image: circleci/python:3.9
@@ -44,7 +43,7 @@ jobs:
       - run:
           name: Deploy application
           command: |
-            ssh -o StrictHostKeyChecking=no user@13.201.94.21   '
+            ssh -o StrictHostKeyChecking=no user@13.201.94.21 '
               cd /var/www/html/python &&
               docker-compose pull &&
               docker-compose up -d
@@ -60,8 +59,4 @@ workflows:
             - build
       - deploy:
           requires:
-<<<<<<< HEAD
             - build_docker_image
-=======
-            - build_docker_image
->>>>>>> 54222181008858ffbdc1726f76ff6ea3e9edd223
