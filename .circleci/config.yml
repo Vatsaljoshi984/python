@@ -44,7 +44,7 @@ jobs:
       - run:
           name: Deploy application
           command: |
-            ssh -o StrictHostKeyChecking=no user@52.66.208.229 '
+            ssh -o StrictHostKeyChecking=no user@13.201.94.21   '
               cd /var/www/html/python &&
               docker-compose pull &&
               docker-compose up -d
