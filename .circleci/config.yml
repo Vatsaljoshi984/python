@@ -1,0 +1,63 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.9
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            python -m pip install --upgrade pip
+            pip install Django psycopg2-binary  # Add your dependencies here
+      - run:
+          name: Run tests
+          command: |
+            python manage.py migrate
+            python manage.py test
+
+  build_docker_image:
+    docker:
+      - image: circleci/python:3.9
+    steps:
+      - setup_remote_docker
+      - checkout
+      - run:
+          name: Build Docker image
+          command: docker build -t my-django-app .
+      - run:
+          name: Push Docker image
+          command: |
+            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            docker tag my-django-app $DOCKER_USERNAME/my-django-app:latest
+            docker push $DOCKER_USERNAME/my-django-app:latest
+
+
+  deploy:
+    docker:
+      - image: circleci/python:3.9
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:dTbd7DeoUsp6E6cpOm1sufbJLEs3Hnglp4PTX+/2vBc"
+      - run:
+          name: Deploy application
+          command: |
+            ssh -o StrictHostKeyChecking=no user@13.201.94.21   '
+              cd /var/www/html/python &&
+              docker-compose pull &&
+              docker-compose up -d
+            '
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
+      - build_docker_image:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - build_docker_image
