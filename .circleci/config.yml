@@ -33,29 +33,27 @@ jobs:
             docker tag my-django-app vatsal929/my-django-app:latest
             docker push vatsal929/my-django-app:latest
 
-
   deploy:
-     docker:
-    - image: circleci/python:3.9
-  steps:
-    - add_ssh_keys:
-        fingerprints:
-          - "SHA256:dTbd7DeoUsp6E6cpOm1sufbJLEs3Hnglp4PTX+/2vBc"
-    - run:
-        name: Install docker-compose
-        command: |
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa ubuntu@13.201.94.21 '
-            sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose &&
-            sudo chmod +x /usr/local/bin/docker-compose
-          '
-    - run:
-        name: Deploy application
-        command: |
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa ubuntu@13.201.94.21 '
-            cd /var/www/html/python &&
-            docker-compose pull &&
-            docker-compose up -d
-          '
+    docker:
+      - image: circleci/python:3.9
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:dTbd7DeoUsp6E6cpOm1sufbJLEs3Hnglp4PTX+/2vBc"
+      - run:
+          name: Install docker-compose
+          command: |
+            ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa ubuntu@13.201.94.21 '
+              sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose &&
+              sudo chmod +x /usr/local/bin/docker-compose
+            '
+      - run:
+          name: Deploy application
+          command: |
+            ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa ubuntu@13.201.94.21 '
+              cd /var/www/html/python &&
+              docker-compose pull &&
+              docker-compose up -d
             '
 
 workflows:
@@ -69,4 +67,3 @@ workflows:
       - deploy:
           requires:
             - build_docker_image
-            
