@@ -10,7 +10,7 @@ jobs:
           name: Install dependencies
           command: |
             python -m pip install --upgrade pip
-            pip install -r requirements.txt
+            pip install Django psycopg2-binary # Add your dependencies here
       - run:
           name: Run tests
           command: |
@@ -44,7 +44,7 @@ jobs:
           name: Deploy application
           command: |
             ssh -o StrictHostKeyChecking=no user@52.66.208.229 '
-              cd /path/to/your/app &&
+              cd /var/www/html/python &&
               docker-compose pull &&
               docker-compose up -d
             '
