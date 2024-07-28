@@ -60,4 +60,8 @@ workflows:
             - build
       - deploy:
           requires:
+<<<<<<< HEAD
             - build_docker_image
+=======
+            - build_docker_image
+>>>>>>> 54222181008858ffbdc1726f76ff6ea3e9edd223
