@@ -10,7 +10,7 @@ jobs:
           name: Install dependencies
           command: |
             python -m pip install --upgrade pip
-            pip install Django psycopg2-binary  # Add your dependencies here
+            pip install Django psycopg2-binary
       - run:
           name: Run tests
           command: |
@@ -52,8 +52,13 @@ jobs:
           command: |
             ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa ubuntu@13.201.94.21 '
               cd /var/www/html/python &&
-              docker-compose pull &&
-              docker-compose up -d
+              if [ -f docker-compose.yml ]; then
+                docker-compose pull &&
+                docker-compose up -d
+              else
+                echo "docker-compose.yml not found!"
+                exit 1
+              fi
             '
 
 workflows:
