@@ -33,6 +33,7 @@ jobs:
             docker tag my-django-app vatsal929/my-django-app:latest
             docker push vatsal929/my-django-app:latest
 
+
   deploy:
     docker:
       - image: circleci/python:3.9
@@ -43,10 +44,12 @@ jobs:
       - run:
           name: Deploy application
           command: |
-            ssh -o StrictHostKeyChecking=no user@13.201.94.21
+            ssh -o StrictHostKeyChecking=no ubuntu@13.201.94.21 '
               cd /var/www/html/python &&
               docker-compose pull &&
               docker-compose up -d
+            '
+
             
 
 workflows:
