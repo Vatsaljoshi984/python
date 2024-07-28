@@ -29,9 +29,9 @@ jobs:
       - run:
           name: Push Docker image
           command: |
-            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-            docker tag my-django-app $DOCKER_USERNAME/my-django-app:latest
-            docker push $DOCKER_USERNAME/my-django-app:latest
+            echo $DOCKER_PASSWORD | docker login -u vatsal929 --password-stdin
+            docker tag my-django-app vatsal929/my-django-app:latest
+            docker push vatsal929/my-django-app:latest
 
   deploy:
     docker:
