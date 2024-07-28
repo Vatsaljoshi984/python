@@ -60,3 +60,4 @@ workflows:
       - deploy:
           requires:
             - build_docker_image
+            
