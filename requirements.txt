@@ -1,0 +1,2 @@
+Django==3.2.19  # or any other compatible version
+asgiref==3.8.1
