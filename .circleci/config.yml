@@ -10,7 +10,7 @@ jobs:
           name: Install dependencies
           command: |
             python -m pip install --upgrade pip
-            pip install Django psycopg2-binary
+            pip install Django psycopg2-binary  # Add your dependencies here
       - run:
           name: Run tests
           command: |
@@ -41,24 +41,18 @@ jobs:
           fingerprints:
             - "SHA256:dTbd7DeoUsp6E6cpOm1sufbJLEs3Hnglp4PTX+/2vBc"
       - run:
-          name: Install docker-compose
-          command: |
-            ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa ubuntu@13.201.94.21 '
-              sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose &&
-              sudo chmod +x /usr/local/bin/docker-compose
-            '
+          name: Install PM2
+          command: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa ubuntu@13.201.94.21 'npm install pm2 -g'
       - run:
-          name: Deploy application
+          name: Deploy application with PM2
           command: |
             ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa ubuntu@13.201.94.21 '
               cd /var/www/html/python &&
-              if [ -f docker-compose.yml ]; then
-                docker-compose pull &&
-                docker-compose up -d
-              else
-                echo "docker-compose.yml not found!"
-                exit 1
-              fi
+              pm2 stop my-django-app || true &&
+              git pull &&
+              pip install -r requirements.txt &&
+              python manage.py migrate &&
+              pm2 start python --name my-django-app -- manage.py runserver 0.0.0.0:8001
             '
 
 workflows:
