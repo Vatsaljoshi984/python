@@ -43,7 +43,7 @@ jobs:
       - run:
           name: Deploy application
           command: |
-            ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa ubuntu@13.201.94.21 '
+            ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa ubuntu@3.109.60.225 '
               cd /var/www/html/python &&
               git pull &&
               pip install -r requirements.txt &&
